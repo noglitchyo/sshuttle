@@ -6,6 +6,7 @@ import sys
 import os
 import platform
 import traceback
+import shutil
 from sshuttle.helpers import debug1, debug2, Fatal
 from sshuttle.methods import get_auto_method, get_method
 
@@ -25,8 +26,8 @@ def rewrite_etc_hosts(hostmap, port):
             pass
         else:
             raise
-    if old_content.strip() and not os.path.exists(BAKFILE):
-        os.link(HOSTSFILE, BAKFILE)
+    #if old_content.strip() and not os.path.exists(BAKFILE):
+    #    os.link(HOSTSFILE, BAKFILE)
     tmpname = "%s.%d.tmp" % (HOSTSFILE, port)
     f = open(tmpname, 'w')
     for line in old_content.rstrip().split('\n'):
@@ -43,7 +44,7 @@ def rewrite_etc_hosts(hostmap, port):
     else:
         os.chown(tmpname, 0, 0)
         os.chmod(tmpname, 0o600)
-    os.rename(tmpname, HOSTSFILE)
+    shutil.move(tmpname, HOSTSFILE)
 
 
 def restore_etc_hosts(port):
